@@ -1,11 +1,11 @@
 package co.elastic.agent;
 
 import com.google.gson.Gson;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+//import org.elasticsearch.action.index.IndexResponse;
+//import org.elasticsearch.client.transport.TransportClient;
+//import org.elasticsearch.common.settings.Settings;
+//import org.elasticsearch.common.transport.InetSocketTransportAddress;
+//import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +28,15 @@ public class ElasticReporter {
         System.out.println(jsonStr);
         logger.info(jsonStr);
 
-        //TODO: Report Asynchronously to an ElasticSearch Instance
+//        //TODO: Report Asynchronously to an ElasticSearch Instance
 //        try {
 //            TransportClient client = new PreBuiltTransportClient(Settings.EMPTY)
 //                    .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("192.168.0.214"), 9300));
 //            IndexResponse response = client.prepareIndex("javaagent", "java")
 //                    .setSource(jsonStr)
 //                    .get();
-//
 //        } catch (Exception e) {
 //            System.out.println("Dude broke");
 //        }
     }
-
-
 }

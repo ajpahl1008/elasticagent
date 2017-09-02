@@ -7,10 +7,12 @@ import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 
+
 public class ElasticAgent {
 
     private final static Logger LOG = LoggerFactory.getLogger(ElasticAgent.class);
 
+    @SkipMeasured
     public static void premain(String agentArguments, Instrumentation instrumentation){
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
         LOG.info("Runtime: {}: {}", runtimeMxBean.getName(), runtimeMxBean.getInputArguments());

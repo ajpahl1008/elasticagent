@@ -20,7 +20,6 @@ public class TimedClassTransformer implements ClassFileTransformer {
 		classPool.appendSystemPath();
 		try {
 			classPool.appendPathList(System.getProperty("java.class.path"));
-			
 			// make sure that MetricReporter is loaded
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -51,15 +50,21 @@ public class TimedClassTransformer implements ClassFileTransformer {
 				if  (!ctClass.getPackageName().contains("java") && !ctClass.getPackageName().contains("sun")
 															    && !ctClass.getPackageName().contains("google")
 																&& !ctClass.getPackageName().contains("co.elastic")
-																&& !ctClass.getPackageName().contains("elasticsearch")
+																&& !ctClass.getPackageName().contains("org.elasticsearch")
                                                                 && !ctClass.getPackageName().contains("org.joda")
 																|| method.hasAnnotation(Measured.class)) {
+
 					if (method.getMethodInfo().getCodeAttribute() == null) {
 						logger.debug("Skip method " + method.getLongName());
 						continue;
 					}
 					if (method.getMethodInfo().getName().contains("printTime") ) {
 						logger.debug("Skip method " + method.getLongName());
+						continue;
+					}
+
+					if (method.hasAnnotation(SkipMeasured.class)) {
+						logger.debug("Annotated skip: " + method.getLongName());
 						continue;
 					}
 
