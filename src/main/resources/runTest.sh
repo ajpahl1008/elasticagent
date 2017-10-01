@@ -1,0 +1,1 @@
+sudo java -javaagent:/Users/aj/Development/GitHub/elasticagent/build/libs/elasticagent-1.0-SNAPSHOT.jar -jar /Users/aj/Development/GitHub/pahlsoft-honeypot/target/telnet-server.jar#!/usr/bin/env bash

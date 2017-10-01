@@ -1,5 +1,7 @@
-package co.elastic.agent;
+package co.elastic.agent.transformers;
 
+import co.elastic.agent.annotations.Measured;
+import co.elastic.agent.annotations.SkipMeasured;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -12,7 +14,7 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 public class TimedClassTransformer implements ClassFileTransformer {
-	private final static Logger logger = LoggerFactory.getLogger(TimedClassTransformer.class);
+	private Logger logger = LoggerFactory.getLogger(TimedClassTransformer.class);
 	private ClassPool classPool;
 	
 	public TimedClassTransformer() {
@@ -20,7 +22,6 @@ public class TimedClassTransformer implements ClassFileTransformer {
 		classPool.appendSystemPath();
 		try {
 			classPool.appendPathList(System.getProperty("java.class.path"));
-			// make sure that MetricReporter is loaded
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -38,9 +39,14 @@ public class TimedClassTransformer implements ClassFileTransformer {
 				logger.debug("Skip class {}: is frozen", className);
 				return null;
 			}
+
+			if (ctClass.hasAnnotation(SkipMeasured.class)) {
+				logger.info("Skipping Class: " + ctClass.getName());
+				return null;
+			}
 			
 			if (ctClass.isPrimitive() || ctClass.isArray() || ctClass.isAnnotation()
-					|| ctClass.isEnum() || ctClass.isInterface() || ctClass.getName().contains("ElasticMetricObject")) {
+					|| ctClass.isEnum() || ctClass.isInterface()) {
 				logger.debug("Skip class {}: not a class", className);
 				return null;
 			}
@@ -48,10 +54,12 @@ public class TimedClassTransformer implements ClassFileTransformer {
 			boolean isClassModified = false;
 			for(CtMethod method: ctClass.getDeclaredMethods()) {
 				if  (!ctClass.getPackageName().contains("java") && !ctClass.getPackageName().contains("sun")
-															    && !ctClass.getPackageName().contains("google")
-																&& !ctClass.getPackageName().contains("co.elastic")
+															    && !ctClass.getPackageName().contains("com.google")
+																&& !ctClass.getPackageName().contains("co.elastic.agent")
 																&& !ctClass.getPackageName().contains("org.elasticsearch")
                                                                 && !ctClass.getPackageName().contains("org.joda")
+																&& !ctClass.getPackageName().contains("org.json")
+																&& !ctClass.getPackageName().contains("org.apache.http")
 																|| method.hasAnnotation(Measured.class)) {
 
 					if (method.getMethodInfo().getCodeAttribute() == null) {
@@ -64,7 +72,7 @@ public class TimedClassTransformer implements ClassFileTransformer {
 					}
 
 					if (method.hasAnnotation(SkipMeasured.class)) {
-						logger.debug("Annotated skip: " + method.getLongName());
+						logger.info("Annotated skip: " + method.getLongName());
 						continue;
 					}
 
