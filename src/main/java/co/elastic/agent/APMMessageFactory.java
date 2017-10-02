@@ -5,6 +5,8 @@ import co.elastic.agent.models.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,18 +22,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class APMMessageFactory {
+    private final static Logger logger = LoggerFactory.getLogger(APMMessageFactory.class);
+
 
     private static App app;
     private static co.elastic.agent.models.System system;
     private static List<Transaction> transactions;
 
     @SkipMeasured
-    public static boolean submitApmMessage() {
-        System.out.println("Building Message");
+    public static boolean submitApmMessage(String className, long executionTime, int processId) {
         app = new App();
 
         app.setName("JavaTest");
-        app.setPid(123456);
+
+        app.setPid(processId);
         app.setProcessTitle("java");
 
         ArrayList<String> argvs = new ArrayList();
@@ -62,9 +66,9 @@ public class APMMessageFactory {
         transactions = new ArrayList<>();
         Transaction transaction = new Transaction();
         transaction.setId(UUID.randomUUID().toString());
-        transaction.setName("GetClassName");
+        transaction.setName(className);
         transaction.setType("setScopeHere");
-        transaction.setDuration(444);
+        transaction.setDuration(executionTime);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
         Date date = new Date();
         transaction.setTimestamp(dateFormat.format(date));
@@ -103,22 +107,19 @@ public class APMMessageFactory {
             os.write(input.getBytes());
             os.flush();
 
-
-
             if (conn.getResponseCode() != HttpURLConnection.HTTP_ACCEPTED) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode() + conn.getResponseMessage());
+                logger.info("Failed : HTTP error code : "
+                        + conn.getResponseCode() + " " + conn.getResponseMessage());
+                return false;
             } else {
-                System.out.println("Sending Message to Server");
-                System.out.println("Response... \n");
-                System.out.println(conn.getResponseMessage() + " " + input);
+                logger.info(conn.getResponseMessage() + " " + input);
                 return true;
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error("Malformed URL Exception: " + e.getCause());
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("IOException: " + e.getStackTrace());
             return false;
         }
 

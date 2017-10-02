@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ElasticReporter {
     private final static Logger logger = LoggerFactory.getLogger(ElasticReporter.class);
+    private final static int processId = Integer.parseInt(java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
     @SkipMeasured
     public static void printTime(String name, long timeInMs) {
@@ -20,11 +21,9 @@ public class ElasticReporter {
         inputMap.put("timing", Long.toString(timeInMs));
 
         String jsonStr = gsonObj.toJson(inputMap);
-        logger.info(jsonStr);
-        APMMessageFactory.submitApmMessage();
 
+        logger.debug(jsonStr);
 
-
-
+        APMMessageFactory.submitApmMessage(name, timeInMs, processId);
     }
 }

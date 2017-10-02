@@ -15,7 +15,7 @@ public class App {
     private String name;
     @SerializedName("pid")
     @Expose
-    private int pid;
+    private long pid;
     @SerializedName("process_title")
     @Expose
     private String processTitle;
@@ -46,16 +46,16 @@ public class App {
         return this;
     }
 
-    public int getPid() {
+    public long getPid() {
         return pid;
     }
 
     @SkipMeasured
-    public void setPid(int pid) {
+    public void setPid(long pid) {
         this.pid = pid;
     }
 
-    public App withPid(int pid) {
+    public App withPid(long pid) {
         this.pid = pid;
         return this;
     }
