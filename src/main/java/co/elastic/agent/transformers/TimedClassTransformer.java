@@ -59,7 +59,9 @@ public class TimedClassTransformer implements ClassFileTransformer {
 																&& !ctClass.getPackageName().contains("org.elasticsearch")
                                                                 && !ctClass.getPackageName().contains("org.joda")
 																&& !ctClass.getPackageName().contains("org.json")
-																&& !ctClass.getPackageName().contains("org.apache.http")
+																&& !ctClass.getPackageName().contains("com.ibm")
+																&& !ctClass.getPackageName().contains("org.eclipse")
+																&& !ctClass.getPackageName().contains("org.apache")
 																|| method.hasAnnotation(Measured.class)) {
 
 					if (method.getMethodInfo().getCodeAttribute() == null) {
