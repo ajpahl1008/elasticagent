@@ -1,5 +1,6 @@
 # elasticagent
 
+The purpose of this project is to provide an easy mechanism for sending your application performance data into apm-server by Elastic without having to modify your source code.
 
 # Compile
 gradle clean build
