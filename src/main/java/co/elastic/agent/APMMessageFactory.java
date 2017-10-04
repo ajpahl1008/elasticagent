@@ -7,10 +7,8 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.System;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@SkipMeasured
 public class APMMessageFactory {
     private final static Logger logger = LoggerFactory.getLogger(APMMessageFactory.class);
 
@@ -29,7 +28,6 @@ public class APMMessageFactory {
     private static co.elastic.agent.models.System system;
     private static List<Transaction> transactions;
 
-    @SkipMeasured
     public static boolean submitApmMessage(String className, long executionTime, int processId) {
         app = new App();
 
@@ -38,7 +36,7 @@ public class APMMessageFactory {
         app.setPid(processId);
         app.setProcessTitle("java");
 
-        ArrayList<String> argvs = new ArrayList();
+        ArrayList<String> argvs = new ArrayList<>();
         argvs.add("GCFLAG");
         argvs.add("PROGRAM_NAME");
         app.setArgv(argvs);
@@ -96,6 +94,7 @@ public class APMMessageFactory {
         apmMessage.setTransactions(transactions);
 
         try {
+            //TODO: Need a config file for this URL and a runtime arg
             URL url = new URL("http://192.168.0.214:8200/v1/transactions");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 

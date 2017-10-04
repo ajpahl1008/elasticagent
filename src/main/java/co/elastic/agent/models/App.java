@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+@SkipMeasured
 public class App {
 
     @SerializedName("name")
@@ -36,7 +37,6 @@ public class App {
         return name;
     }
 
-    @SkipMeasured
     public void setName(String name) {
         this.name = name;
     }
@@ -50,7 +50,7 @@ public class App {
         return pid;
     }
 
-    @SkipMeasured
+
     public void setPid(long pid) {
         this.pid = pid;
     }
@@ -64,7 +64,7 @@ public class App {
         return processTitle;
     }
 
-    @SkipMeasured
+
     public void setProcessTitle(String processTitle) {
         this.processTitle = processTitle;
     }
@@ -78,7 +78,6 @@ public class App {
         return argv;
     }
 
-    @SkipMeasured
     public void setArgv(List<String> argv) {
         this.argv = argv;
     }
@@ -92,7 +91,7 @@ public class App {
         return runTime;
     }
 
-    @SkipMeasured
+
     public void setRuntime(RunTime runTime) {
         this.runTime = runTime;
     }
@@ -102,11 +101,11 @@ public class App {
         return this;
     }
 
-    @SkipMeasured
+
     public Agent getAgent() {
         return agent;
     }
-    @SkipMeasured
+
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
@@ -119,7 +118,7 @@ public class App {
     public Framework getFramework() {
         return framework;
     }
-    @SkipMeasured
+
     public void setFramework(Framework framework) {
         this.framework = framework;
     }
@@ -130,7 +129,6 @@ public class App {
     }
 
     @Override
-    @SkipMeasured
     public String toString() {
         return new ToStringBuilder(this).append("name", name).append("pid", pid).append("processTitle", processTitle).append("argv", argv).append("runtime", runTime).append("agent", agent).append("framework", framework).toString();
     }

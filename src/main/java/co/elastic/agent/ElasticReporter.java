@@ -8,11 +8,12 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class ElasticReporter {
     private final static Logger logger = LoggerFactory.getLogger(ElasticReporter.class);
     private final static int processId = Integer.parseInt(java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 
-    @SkipMeasured
+
     public static void printTime(String name, long timeInMs) {
         Gson gsonObj = new Gson();
 

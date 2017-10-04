@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+@SkipMeasured
 public class APMMessage {
 
     @SerializedName("app")

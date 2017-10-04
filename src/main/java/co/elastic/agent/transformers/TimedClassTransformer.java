@@ -13,6 +13,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
+@SkipMeasured
 public class TimedClassTransformer implements ClassFileTransformer {
 	private Logger logger = LoggerFactory.getLogger(TimedClassTransformer.class);
 	private ClassPool classPool;
@@ -41,7 +42,7 @@ public class TimedClassTransformer implements ClassFileTransformer {
 			}
 
 			if (ctClass.hasAnnotation(SkipMeasured.class)) {
-				logger.info("Skipping Class: " + ctClass.getName());
+				logger.debug("Skipping Class: " + ctClass.getName());
 				return null;
 			}
 			
@@ -53,32 +54,44 @@ public class TimedClassTransformer implements ClassFileTransformer {
 			
 			boolean isClassModified = false;
 			for(CtMethod method: ctClass.getDeclaredMethods()) {
+				//TODO: Need a skip class property loader and config file.
+				// Almost all of this exclusion list is Websphere.
 				if  (!ctClass.getPackageName().contains("java") && !ctClass.getPackageName().contains("sun")
 															    && !ctClass.getPackageName().contains("com.google")
-																&& !ctClass.getPackageName().contains("co.elastic.agent")
-																&& !ctClass.getPackageName().contains("org.elasticsearch")
-                                                                && !ctClass.getPackageName().contains("org.joda")
+																&& !ctClass.getPackageName().contains("org.joda")
 																&& !ctClass.getPackageName().contains("org.json")
+																&& !ctClass.getPackageName().contains("org.xml")
 																&& !ctClass.getPackageName().contains("com.ibm")
 																&& !ctClass.getPackageName().contains("org.eclipse")
+																&& !ctClass.getPackageName().contains("org.osgi")
 																&& !ctClass.getPackageName().contains("org.apache")
-																|| method.hasAnnotation(Measured.class)) {
+																&& !ctClass.getPackageName().contains("org.objectweb")
+																&& !ctClass.getPackageName().contains("org.kxml2")
+																&& !ctClass.getPackageName().contains("org.jboss")
+																&& !ctClass.getPackageName().contains("org.omg")
+																&& !ctClass.getPackageName().contains("org.slf4j")
+																&& !ctClass.getPackageName().contains("org.fusesource")
+																&& !ctClass.getPackageName().contains("org.jcp")
+																&& !ctClass.getPackageName().contains("org.aopalliance")
+																&& !ctClass.getPackageName().contains("com.fasterxml")
+																&& !ctClass.getPackageName().contains("org.springframework")
+																&& !ctClass.getPackageName().contains("jdk")) {
 
 					if (method.getMethodInfo().getCodeAttribute() == null) {
-						logger.debug("Skip method " + method.getLongName());
+						logger.info("Skip method " + method.getLongName());
 						continue;
 					}
-					if (method.getMethodInfo().getName().contains("printTime") ) {
-						logger.debug("Skip method " + method.getLongName());
+					if (method.getMethodInfo().getName().contains("printTime")) {
+						logger.info("Skip method " + method.getLongName());
 						continue;
 					}
 
 					if (method.hasAnnotation(SkipMeasured.class)) {
-						logger.info("Annotated skip: " + method.getLongName());
+						logger.info("Skipped (Annotated): " + method.getLongName());
 						continue;
 					}
 
-					logger.debug("Instrumenting method " + method.getLongName());
+					logger.info("Instrumenting method " + method.getLongName());
 					method.addLocalVariable("__metricStartTime", CtClass.longType);
 					method.insertBefore("__metricStartTime = System.currentTimeMillis();");
 					String metricName = ctClass.getName() + "." + method.getName();

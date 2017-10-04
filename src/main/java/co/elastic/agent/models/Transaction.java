@@ -1,12 +1,14 @@
 
 package co.elastic.agent.models;
 
+import co.elastic.agent.annotations.SkipMeasured;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+@SkipMeasured
 public class Transaction {
 
     @SerializedName("id")
