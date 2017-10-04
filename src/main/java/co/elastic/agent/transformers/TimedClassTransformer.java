@@ -78,20 +78,20 @@ public class TimedClassTransformer implements ClassFileTransformer {
 																&& !ctClass.getPackageName().contains("jdk")) {
 
 					if (method.getMethodInfo().getCodeAttribute() == null) {
-						logger.info("Skip method " + method.getLongName());
+						logger.debug("Skip method " + method.getLongName());
 						continue;
 					}
 					if (method.getMethodInfo().getName().contains("printTime")) {
-						logger.info("Skip method " + method.getLongName());
+						logger.debug("Skip method " + method.getLongName());
 						continue;
 					}
 
 					if (method.hasAnnotation(SkipMeasured.class)) {
-						logger.info("Skipped (Annotated): " + method.getLongName());
+						logger.debug("Skipped (Annotated): " + method.getLongName());
 						continue;
 					}
 
-					logger.info("Instrumenting method " + method.getLongName());
+					logger.debug("Instrumenting method " + method.getLongName());
 					method.addLocalVariable("__metricStartTime", CtClass.longType);
 					method.insertBefore("__metricStartTime = System.currentTimeMillis();");
 					String metricName = ctClass.getName() + "." + method.getName();
