@@ -1,12 +1,13 @@
 # elasticagent
 
 
-#Compile
+# Compile
 gradle clean build
 
-#Run
+# Run
 java -javaagent:elasticagent-1.0-SNAPSHOT.jar -jar AppYouWantToMeasure.jar
 
 # Warnings
-The IP Address is currently hard coded.  Config files are the next big feature update.
+The IP Address is currently hard coded in APMMessageFactory.
+Config files are the next big feature update.
 
