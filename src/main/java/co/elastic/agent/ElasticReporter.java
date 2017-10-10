@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@SkipMeasured
 public class ElasticReporter {
     private final static Logger logger = LoggerFactory.getLogger(ElasticReporter.class);
     private final static int processId = Integer.parseInt(java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);

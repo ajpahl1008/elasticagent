@@ -1,0 +1,27 @@
+#Elasticsearch apm-server
+connection:
+    url: http://192.168.0.214:8200
+
+#Skip these packages
+skip:
+  - sun
+  - java
+  - jdk
+  - com.google
+  - org.joda
+  - org.json
+  - org.xml
+  - com.ibm
+  - org.eclipse
+  - org.osgi
+  - org.apache
+  - org.objectweb
+  - org.kxml2
+  - org.jboss
+  - org.omg
+  - org.slf4j
+  - org.fusesource
+  - org.jcp
+  - org.aopalliance
+  - com.fasterxml
+  - org.springframework
