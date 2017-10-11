@@ -2,6 +2,7 @@ package co.elastic.agent;
 
 import co.elastic.agent.annotations.SkipMeasured;
 import co.elastic.agent.models.*;
+import co.elastic.agent.models.configuration.Configuration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
@@ -27,8 +28,13 @@ public class APMMessageFactory {
     private static App app;
     private static co.elastic.agent.models.System system;
     private static List<Transaction> transactions;
+    private static Configuration configuration;
 
-    public static boolean submitApmMessage(String className, long executionTime, int processId) {
+    public APMMessageFactory(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public boolean submitApmTransaction( String className, long executionTime, int processId) {
         app = new App();
 
         app.setName("JavaTest");
@@ -94,8 +100,7 @@ public class APMMessageFactory {
         apmMessage.setTransactions(transactions);
 
         try {
-            //TODO: Need a config file for this URL and a runtime arg
-            URL url = new URL("http://192.168.0.214:8200/v1/transactions");
+            URL url = new URL(configuration.getConnection().getUrl() + "/v1/transactions");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setDoOutput(true);

@@ -25,16 +25,22 @@ public class ElasticAgent {
         LOG.info("=== Starting ElasticAgent ===");
         RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
         LOG.info("Runtime: {}: {}", runtimeMxBean.getName(), runtimeMxBean.getInputArguments());
-        LOG.info("Starting agent with arguments " + agentArguments);
-        LOG.info("Reading Elasticagent config File: ");
+
+        if (System.getProperty("path.config") == null) {
+            LOG.info("-Dpath.config=<config.yml> missing");
+            System.exit(1);
+        } else {
+            LOG.info("path.config " + System.getProperty("path.config"));
+        }
+        LOG.info("Reading Elasticagent config File ");
 
         Yaml yaml = new Yaml();
         Configuration configuration = null;
 
         try {
-            InputStream in = Files.newInputStream(Paths.get("src/main/resources/elasticagent.yml"));
+            InputStream in = Files.newInputStream(Paths.get(System.getProperty("path.config")));
             configuration = yaml.loadAs(in, Configuration.class);
-            System.out.println(configuration.toString());
+            LOG.debug(configuration.toString());
         } catch (Exception e) {
             LOG.error("Error Reading elasticagent.yml");
         }

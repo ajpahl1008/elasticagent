@@ -59,7 +59,6 @@ public class TimedClassTransformer implements ClassFileTransformer {
 				logger.debug("Skipping By Config: " + ctClass.getPackageName());
 				return null;
 			}
-
 			boolean isClassModified = false;
 			for(CtMethod method: ctClass.getDeclaredMethods()) {
 				if (method.getMethodInfo().getCodeAttribute() == null) {
@@ -67,11 +66,11 @@ public class TimedClassTransformer implements ClassFileTransformer {
 					continue;
 				}
 				if (method.getMethodInfo().getName().contains("printTime")) {
-					logger.info("Skip method " + method.getLongName());
+					logger.debug("Skip method " + method.getLongName());
 					continue;
 				}
 				if (method.hasAnnotation(SkipMeasured.class)) {
-					logger.info("Skipped (Annotated): " + method.getLongName());
+					logger.debug("Skipped (Annotated): " + method.getLongName());
 					continue;
 				}
 
@@ -88,8 +87,7 @@ public class TimedClassTransformer implements ClassFileTransformer {
 			}
 			return ctClass.toBytecode();
 		} catch (Exception e) {
-			logger.error("Exception: class {}: ", className);
-			e.printStackTrace();
+			logger.debug("Exception Caught: class {}: ", className);
 			return null;
 		}
     }
