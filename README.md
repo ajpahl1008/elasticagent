@@ -6,9 +6,8 @@ The purpose of this project is to provide an easy mechanism for sending your app
 gradle clean build
 
 # Run
-java -javaagent:elasticagent-1.0-SNAPSHOT.jar -jar AppYouWantToMeasure.jar
+java -javaagent:elasticagent-1.0-SNAPSHOT.jar -Dpath.config=/path/to/config.yml -jar AppYouWantToMeasure.jar
 
-# Warnings
-The IP Address is currently hard coded in APMMessageFactory.
-Config files are the next big feature update.
-
+# Roadmap
+1.) Finish testing this on Websphere Liberty and provide some instructions on setup of server.xml and jvm.options
+2.) Maybe JBOSS?
