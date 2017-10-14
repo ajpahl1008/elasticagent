@@ -34,7 +34,7 @@ public class APMMessageFactory {
         this.configuration = configuration;
     }
 
-    public boolean submitApmTransaction( String className, long executionTime, int processId) {
+    public boolean submitApmTransaction( String className, long executionTime, int processId, StackTraceElement[] stackTraceElements ) {
         app = new App();
 
         app.setName("JavaTest");
@@ -83,7 +83,7 @@ public class APMMessageFactory {
         context.setTags(new Tags());
         context.setUser(new User());
         transaction.setContext(context);
-        transaction.setTraces(null);
+        transaction.setTraces(null);  //TODO: This is where the calling class/method are going to be captured.
 
         transactions.add(transaction);
 

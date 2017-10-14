@@ -34,6 +34,8 @@ public class ElasticReporter {
     public static void printTime(String name, long timeInMs) {
         loadConfig();
         apmMessageFactory = new APMMessageFactory(configuration);
-        apmMessageFactory.submitApmTransaction(name, timeInMs, processId);
+        apmMessageFactory.submitApmTransaction(name, timeInMs, processId, Thread.currentThread().getStackTrace());
     }
+
+
 }

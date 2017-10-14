@@ -34,7 +34,7 @@ public class Transaction {
     private Context context;
     @SerializedName("traces")
     @Expose
-    private List<Object> traces = null;
+    private StackTraceElement[] traces = null;
 
     public String getId() {
         return id;
@@ -127,15 +127,15 @@ public class Transaction {
         return this;
     }
 
-    public List<Object> getTraces() {
+    public StackTraceElement[] getTraces() {
         return traces;
     }
 
-    public void setTraces(List<Object> traces) {
+    public void setTraces(StackTraceElement[] traces) {
         this.traces = traces;
     }
 
-    public Transaction withTraces(List<Object> traces) {
+    public Transaction withTraces(StackTraceElement[] traces) {
         this.traces = traces;
         return this;
     }
