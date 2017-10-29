@@ -15,10 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SkipMeasured
 public class APMMessageFactory {
@@ -29,23 +26,23 @@ public class APMMessageFactory {
     private static co.elastic.agent.models.System system;
     private static List<Transaction> transactions;
     private static Configuration configuration;
+    private static Environment environment;
 
-    public APMMessageFactory(Configuration configuration) {
+    public APMMessageFactory(Configuration configuration, Environment environment) {
         this.configuration = configuration;
+        this.environment = environment;
     }
 
-    public boolean submitApmTransaction( String className, long executionTime, int processId, StackTraceElement[] stackTraceElements ) {
+    public boolean submitApmError() {
+        return false;  //TODO: Stubbed for future use
+    }
+
+    public boolean submitApmTransaction( String className, long executionTime, StackTraceElement[] stackTraceElements ) {
         app = new App();
-
-        app.setName("JavaTest");
-
-        app.setPid(processId);
+        app.setName(environment.getMainClassName());
+        app.setPid(environment.getProcessId());
         app.setProcessTitle("java");
-
-        ArrayList<String> argvs = new ArrayList<>();
-        argvs.add("GCFLAG");
-        argvs.add("PROGRAM_NAME");
-        app.setArgv(argvs);
+        app.setArgv(environment.getMainArgs());
 
         RunTime runTime = new RunTime();
         runTime.setName("java");
@@ -54,7 +51,7 @@ public class APMMessageFactory {
 
         Agent agent = new Agent();
         agent.setName("elasticagent");
-        agent.setVersion("0.0.1");
+        agent.setVersion("1.0-SNAPSHOT");
         app.setAgent(agent);
 
         Framework framework = new Framework();
@@ -63,9 +60,9 @@ public class APMMessageFactory {
         app.setFramework(framework);
 
         system = new co.elastic.agent.models.System();
-        system.setHostname("maddog");
-        system.setArchitecture("mac");
-        system.setPlatform("darwin");
+        system.setHostname(environment.getHostname());
+        system.setArchitecture(environment.getOperatingSystemPlatform());
+        system.setPlatform(environment.getOperatingSystemName());
 
         transactions = new ArrayList<>();
         Transaction transaction = new Transaction();
@@ -100,7 +97,7 @@ public class APMMessageFactory {
         apmMessage.setTransactions(transactions);
 
         try {
-            URL url = new URL(configuration.getConnection().getUrl() + "/v1/transactions");
+            URL url = new URL(configuration.getConnection().getUrl() + "/v1/transactions"); //TODO: Change this to a constant somewhere
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setDoOutput(true);
@@ -128,4 +125,5 @@ public class APMMessageFactory {
         }
 
     }
+
 }
